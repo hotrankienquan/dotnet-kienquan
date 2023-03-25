@@ -9,6 +9,8 @@ import { Post } from "../../app/models/Post";
 import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import NotFound from "../../app/errors/NotFound";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchPostAsync, postsSelector } from "./postSlice";
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
   .post {
@@ -98,19 +100,22 @@ const PostDetailsPageStyles = styled.div`
 
 const PostDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
-    const [post, setPost] = useState<Post | null>(null);
-    const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch()
+  const post = useAppSelector(state => postsSelector.selectById(state, id!))
+  
+  const {status} = useAppSelector(state => state.post)
+  
+  useEffect(() => {
+    if (!post && id) {
+      dispatch(fetchPostAsync(parseInt(id)));
+    }
+  }, [id, post,dispatch])
 
-    useEffect(() => {
-      id && agent.Post.details(parseInt(id))
-        .then(response => setPost(response))
-        .catch(error => console.log(error))
-      .finally(() => setLoading(false))
-    }, [id]);
+   
   useEffect(() => {
     document.body.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [post]);
-  if (loading) return <LoadingComponent message="loading post..."/>
+  if (status.includes('pending')) return <LoadingComponent message="loading post..."/>
 
   if (!post) return <NotFound />
   return (
