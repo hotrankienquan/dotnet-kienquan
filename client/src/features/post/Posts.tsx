@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Post } from '../../app/models/Post'
 import { Grid } from '@mui/material';
+import PostCard from './PostCard';
 
-const Catalog = () => {
+const Posts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   useEffect(() => {
     fetch('http://localhost:5099/api/Post')
@@ -14,16 +15,14 @@ const Catalog = () => {
 
   }, [])
   return (
-    <div>
       <Grid container spacing={4}>
         {posts.map(post => (
-          <Grid item xs={3} key={post.id}>
-              {post.description}
+            <Grid item xs={3} key={post.id}>
+                <PostCard post={post} />
             </Grid>
-          ))}
-      </Grid>
-    </div>
+        ))}
+    </Grid>
   )
 }
 
-export default Catalog
+export default Posts

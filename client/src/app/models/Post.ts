@@ -1,6 +1,8 @@
 export interface Post{
   id: number,
-  name: string,
-  description: string,
-  pictureUrl: string
+  title: string,
+  content: string,
+  pictureUrl: string,
+  status: number,
+  hot:boolean
 }
