@@ -6,6 +6,9 @@ import PostMeta from "../../components/post/PostMeta";
 import AuthorBox from "../../components/author/AuthorBox";
 import axios from "axios";
 import { Post } from "../../app/models/Post";
+import agent from "../../app/api/agent";
+import LoadingComponent from "../../app/layout/LoadingComponent";
+import NotFound from "../../app/errors/NotFound";
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
   .post {
@@ -99,17 +102,17 @@ const PostDetailsPage = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`http://localhost:5099/api/Post/${id}`)
-            .then(response => setPost(response.data))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false))
+      id && agent.Post.details(parseInt(id))
+        .then(response => setPost(response))
+        .catch(error => console.log(error))
+      .finally(() => setLoading(false))
     }, [id]);
   useEffect(() => {
     document.body.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [post]);
-  if (loading) return <h3>Loading...</h3>
+  if (loading) return <LoadingComponent message="loading post..."/>
 
-  if (!post) return <h3>Product not found</h3>
+  if (!post) return <NotFound />
   return (
     <PostDetailsPageStyles>
         <div className="container">

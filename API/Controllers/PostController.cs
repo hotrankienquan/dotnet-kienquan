@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {  
-    [ApiController]
-    [Route("api/[controller]")]
-    public class PostController : ControllerBase
+    
+    public class PostController : BaseApiController
     {
         private readonly StoreContext _context;
         public PostController(StoreContext context) {
@@ -21,7 +20,11 @@ namespace API.Controllers
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetBaiviet(int id) {
-      return await _context.Posts.FindAsync(id);
-    }
+            var post =  await _context.Posts.FindAsync(id);
+
+            if(post == null) return NotFound();
+
+            return post;
+        }
     }
 }
