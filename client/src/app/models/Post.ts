@@ -6,3 +6,11 @@ export interface Post{
   status: number,
   hot:boolean
 }
+
+
+export interface PostParams {
+  orderBy: string;
+  searchTerm?: string;
+  pageNumber: number;
+  pageSize: number;
+}
