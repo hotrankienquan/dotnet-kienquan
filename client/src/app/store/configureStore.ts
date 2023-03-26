@@ -3,11 +3,13 @@ import { counterSlice } from "../../features/contact/counterSlice";
 import { TypedUseSelectorHook, useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { postSlice } from "../../features/post/postSlice";
+import { accountSlice } from "../../features/account/accountSlice";
 
 export const store = configureStore({
   reducer: {
     counter: counterSlice.reducer,
-    post: postSlice.reducer
+    post: postSlice.reducer,
+    account: accountSlice.reducer
   }
 });
 

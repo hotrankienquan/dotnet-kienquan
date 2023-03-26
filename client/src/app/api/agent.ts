@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from 'react-toastify';
 import { router } from "../router/Routes";
 import { PaginatedResponse } from "../models/pagination";
+import { store } from "../store/configureStore";
 
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
@@ -9,6 +10,12 @@ const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 axios.defaults.baseURL = 'http://localhost:5099/api/';
 
 const responseBody = (res: AxiosResponse) => res.data;
+
+axios.interceptors.request.use(config => {
+  const token = store.getState().account.user?.token;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
 axios.interceptors.response.use(async response => {
   await sleep();
@@ -58,6 +65,11 @@ const Post = {
   details: (id: number) => requests.get(`Post/${id}`)
 };
 
+const Account = {
+  login: (values: any) => requests.post('account/login', values),
+    register: (values: any) => requests.post('account/register', values),
+    currentUser: () => requests.get('account/currentUser')
+}
 const TestErrors = {
   get400Error: () => requests.get('buggy/bad-request'),
   get401Error: () => requests.get('buggy/unauthorised'),
@@ -66,6 +78,6 @@ const TestErrors = {
   getValidationError: () => requests.get('buggy/validation-error')
 }
 
-const agent = { Post, TestErrors }
+const agent = { Post, TestErrors, Account}
 
 export default agent

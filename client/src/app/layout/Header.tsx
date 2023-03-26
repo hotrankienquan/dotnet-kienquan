@@ -2,6 +2,8 @@ import React from 'react'
 import { AppBar, Badge, IconButton, List, ListItem, Switch, Toolbar, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { Box } from '@mui/system';
+import { useAppSelector } from '../store/configureStore';
+import SignedInMenu from './SignedInMenu';
 interface Props {
   darkMode: boolean;
   handleChangeTheme: () => void;
@@ -27,7 +29,8 @@ const navStyles = {
     color: 'text.secondary'
   }
 }
-const Header = ({darkMode, handleChangeTheme} : Props) => {
+const Header = ({ darkMode, handleChangeTheme }: Props) => {
+  const {user } = useAppSelector(state => state.account)
   return (
     <AppBar position="static" sx={{mb:4}}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -53,20 +56,26 @@ const Header = ({darkMode, handleChangeTheme} : Props) => {
           ))}
       </List>
       <Box display='flex' alignItems='center'>
-          
+          {
+            user ? (
+            <SignedInMenu />
+            ) : (
+                
+            <List sx={{ display: 'flex' }}>
+                {rightLinks.map(({ title, path }) => (
+                    <ListItem
+                        component={NavLink}
+                        to={path}
+                        key={path}
+                        sx={navStyles}
+                    >
+                        {title.toUpperCase()}
+                    </ListItem>
+                ))}
+            </List>
+            )
+          }
 
-          <List sx={{ display: 'flex' }}>
-              {rightLinks.map(({ title, path }) => (
-                  <ListItem
-                      component={NavLink}
-                      to={path}
-                      key={path}
-                      sx={navStyles}
-                  >
-                      {title.toUpperCase()}
-                  </ListItem>
-              ))}
-          </List>
       </Box>    
       </Toolbar>
     </AppBar>
