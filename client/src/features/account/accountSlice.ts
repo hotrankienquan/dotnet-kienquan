@@ -57,7 +57,9 @@ export const accountSlice = createSlice({
             router.navigate('/');
         },
         setUser: (state, action) => {
-            state.user = action.payload;
+            let claims = JSON.parse(atob(action.payload.token.split('.')[1])); 
+            let roles = claims['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+            state.user = {...action.payload, roles: typeof(roles) === 'string' ? [roles] : [roles]}; 
         }
     },
     extraReducers: (builder => {
@@ -67,9 +69,11 @@ export const accountSlice = createSlice({
             toast.error('Session expired - please login again');
             router.navigate('/');
         })
+        // "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
         builder.addMatcher(isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled), (state, action) => {
-            console.log(action);
-            state.user = action.payload;
+            let claims = JSON.parse(atob(action.payload.token.split('.')[1])); 
+            let roles = claims['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+            state.user = {...action.payload, roles: typeof(roles) === 'string' ? [roles] : [roles]}; 
         });
         builder.addMatcher(isAnyOf(signInUser.rejected), (state, action) => {
             throw action.payload;

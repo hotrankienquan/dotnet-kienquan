@@ -15,5 +15,6 @@ namespace API.Entities
         public int Status { get; set; }
 
         public bool Hot { get; set; }
+        public string PublicId { get; set; }
   }
 }

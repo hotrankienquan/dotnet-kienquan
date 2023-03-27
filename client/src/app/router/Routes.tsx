@@ -9,17 +9,17 @@ import NotFound from "../errors/NotFound";
 import ServerError from "../errors/ServerError";
 import Register from "../../features/account/Register";
 import Login from "../../features/account/Login";
-import AdminPage from "../../features/Admin/AdminPage";
 import RequireAuth from "./RequireAuth";
+import AdminPage from "../../features/Admin/Admin";
 
 export const router = createBrowserRouter([
   {
       path: '/',
       element: <App />,
     children: [
-      {element: <RequireAuth />, children: [
-        {path: 'adminpage', element: <AdminPage />},
-    ]},
+        {element: <RequireAuth roles={['admin']} />, children: [
+          {path: 'adminpage', element: <AdminPage />},
+      ]},
           {path: '', element: <HomePage />},
           {path: 'post', element: <Posts />},
           {path: 'post/:id', element: <PostDetail />},

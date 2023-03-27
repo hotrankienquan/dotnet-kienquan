@@ -9,22 +9,16 @@ import { fetchPostsAsync, postsSelector, setPageNumber, setPostParams } from './
 import Search from './PostSearch';
 import RadioButtonGroup from '../../components/RadioButtonGroup';
 import AppPagination from '../../components/AppPagination';
+import usePosts from '../../app/hooks/usePosts';
 const sortOptions = [
   { value: 'id', label: 'id' },
 ]
 const Posts = () => {
-  const posts = useAppSelector(postsSelector.selectAll);
-  console.log(posts)
+  const { metaData,posts,postsLoaded} = usePosts();
+    const {postParams, status} = useAppSelector(state => state.post);
   const dispatch = useAppDispatch();  
 
-  const { postsLoaded, status ,postParams, metaData} = useAppSelector(state => state.post);
 
-
-  useEffect(() => {
-    if (!postsLoaded) {
-      dispatch(fetchPostsAsync())
-    }
-  }, [postsLoaded, dispatch])
   if (status.includes('pending')) return <LoadingComponent message='loading posts...'/>
   return (
     //   <Grid container spacing={4}>

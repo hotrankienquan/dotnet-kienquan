@@ -77,6 +77,14 @@ export const postSlice = createSlice({
         },
         resetPostParams: (state) => {
             state.postParams = initParams()
+        },
+        setPost: (state, action) => {
+            postsAdapter.upsertOne(state, action.payload);
+            state.postsLoaded = false;
+        },
+        removePost: (state, action) => {
+            postsAdapter.removeOne(state, action.payload);
+            state.postsLoaded = false;
         }
     },
     extraReducers: (builder => {
@@ -108,4 +116,4 @@ export const postSlice = createSlice({
 
 export const postsSelector = postsAdapter.getSelectors((state: RootState) => state.post);
 
-export const {setPostParams, resetPostParams, setMetaData, setPageNumber} = postSlice.actions;
+export const {setPostParams, resetPostParams, setMetaData, setPageNumber, setPost, removePost} = postSlice.actions;

@@ -43,8 +43,8 @@ namespace API.Services
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds
             );
-
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+      Console.WriteLine(tokenOptions);
+      return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         }
     }
 }

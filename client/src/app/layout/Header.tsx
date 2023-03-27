@@ -30,7 +30,8 @@ const navStyles = {
   }
 }
 const Header = ({ darkMode, handleChangeTheme }: Props) => {
-  const {user } = useAppSelector(state => state.account)
+  const { user } = useAppSelector(state => state.account);
+  // console.log("log user in header.tsx",user)
   return (
     <AppBar position="static" sx={{mb:4}}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -54,6 +55,17 @@ const Header = ({ darkMode, handleChangeTheme }: Props) => {
                   {title.toUpperCase()}
               </ListItem>
           ))}
+
+          {
+            user && user.roles?.includes('admin') &&
+            <ListItem
+                component={NavLink}
+                to="/adminpage"
+                sx={navStyles}
+              >
+                ADMIN
+            </ListItem>
+          }
       </List>
       <Box display='flex' alignItems='center'>
           {
